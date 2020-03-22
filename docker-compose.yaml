@@ -9,3 +9,6 @@ services:
       POSTGRES_DB: main
     ports:
       - "5433:5432" # Т.к. порт 5432 занят, приходится использовать другой
+  redis:
+    image: redis:5-alpine
+    ports: [6379]
