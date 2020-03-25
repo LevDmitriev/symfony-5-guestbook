@@ -21,7 +21,7 @@ class SpamChecker
      *
      * @throws \RuntimeException if the call did not work
      */
-    public function getSpamCore(Comment $comment, array $context): int
+    public function getSpamScore(Comment $comment, array $context): int
     {
         $response = $this->client->request('POST', $this->endpoint, [
             'body' => array_merge($context, [
