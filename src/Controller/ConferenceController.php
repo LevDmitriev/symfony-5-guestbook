@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\CommentMessage;
+use App\Message\CommentMessage;
 use App\Entity\Comment;
 use App\Entity\Conference;
 use App\Form\CommentFormType;
