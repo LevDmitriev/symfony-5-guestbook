@@ -18,6 +18,7 @@ build:
 relationships:
     database: "db:postgresql"
     redis: "rediscache:redis"
+    rabbitmq: "queue: rabbitmq"
     
 web:
     locations:
