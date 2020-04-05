@@ -7,7 +7,7 @@ class CommentMessage
     private $id;
     private $context;
 
-    public function __construct(int $id, array $context)
+    public function __construct(int $id, array $context = [])
     {
         $this->id = $id;
         $this->context = $context;
