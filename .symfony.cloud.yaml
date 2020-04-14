@@ -4,17 +4,16 @@ type: php:7.3
 
 runtime:
     extensions:
-        - pdo_pgsql
+        - xsl
+        - amqp
         - redis
+        - pdo_pgsql
         - apcu
         - mbstring
         - sodium
         - ctype
         - iconv
-        - xsl
-        - amqp
-        - redis
-        - pdo_pgsql
+
 
 build:
     flavor: none
@@ -22,8 +21,8 @@ build:
 relationships:
     database: "db:postgresql"
     redis: "rediscache:redis"
-    rabbitmq: "queue: rabbitmq"
-    
+    rabbitmq: "queue:rabbitmq"
+
 web:
     locations:
         "/":
@@ -40,29 +39,23 @@ mounts:
 hooks:
     build: |
         set -x -e
-
         curl -s https://get.symfony.com/cloud/configurator | (>&2 bash)
         (>&2 symfony-build)
-
     deploy: |
         set -x -e
-
         (>&2 symfony-deploy)
-        
 crons:
     comment_cleanup:
-        # Cleanup every night at 11:50 pm (UTC).
-    spec: '50 23 * * *'
-    cmd: |
-        if ["$SYMFONY_BRANCH" = "master"]; then
-            croncape symfony console app:comment🧽
-        fi
-
+        # Cleanup every night at 11.50 pm (UTC).
+        spec: '50 23 * * *'
+        cmd: |
+            if [ "$SYMFONY_BRANCH" = "master" ]; then
+                croncape symfony console app:comment:cleanup
+            fi
 workers:
     messages:
         commands:
             start: |
                 set -x -e
-                
                 (>&2 symfony-deploy)
-                php bin/console messanger:consume async -vv --time-limit 3600 --memory limit=128
+                php bin/console messenger:consume async -vv --time-limit 3600 --memory-limit=128M
